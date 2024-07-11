@@ -52,5 +52,10 @@ namespace ProyectoEjemploModel.Controllers
             else
                 return View(departamento);
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+
+        }
     }
 }

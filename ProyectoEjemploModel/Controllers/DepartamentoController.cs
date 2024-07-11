@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ProyectoEjemploModel.Models;
 using X.PagedList;
 
@@ -25,7 +26,7 @@ namespace ProyectoEjemploModel.Controllers
             return View(departamentos);
         }
 
-        //accion que edita
+        //accion que muestra
         public async Task<IActionResult> Details(int id)
         {
             var departamento = await contextoDatos.Departamentos.SingleOrDefaultAsync(d => d.Id == id);
@@ -53,9 +54,53 @@ namespace ProyectoEjemploModel.Controllers
                 return View(departamento);
         }
 
+        //accion que muestra el formulario
         public async Task<IActionResult> Edit(int id)
         {
+            var departamento = await contextoDatos.Departamentos.SingleOrDefaultAsync(d => d.Id == id);
+            return View(departamento);
+        }
 
+        //accion que recibe los datos modificados del formulario
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Departamento departamento)
+        {
+            if (ModelState.IsValid)
+            {
+                var temp = await contextoDatos.Departamentos.SingleOrDefaultAsync(d => d.Id == departamento.Id);
+                temp.Nombre = departamento.Nombre;
+
+                contextoDatos.Departamentos.Update(temp);
+                await contextoDatos.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            else
+                return View(departamento);
+        }
+
+        //acccion que muestra el formulario de eliminar
+        public async Task<IActionResult> Delete(int id)
+        {
+            var departamento = await contextoDatos.Departamentos.SingleOrDefaultAsync(d => d.Id == id);
+            return View(departamento);
+        }
+
+        //accion que elimina el departamneto
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, Departamento departamento)
+        {
+            var temp = await contextoDatos.Departamentos.SingleOrDefaultAsync(d => d.Id == departamento.Id);
+
+             if(temp != null)
+            {
+                contextoDatos.Departamentos.Remove(temp);
+                await contextoDatos.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+             else
+                return View(temp);  
         }
     }
 }

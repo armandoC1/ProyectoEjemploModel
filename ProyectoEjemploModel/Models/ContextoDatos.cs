@@ -9,5 +9,6 @@ namespace ProyectoEjemploModel.Models
         }
 
         public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Contacto> Contactos { get; set; }
     }
 }
